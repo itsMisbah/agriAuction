@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card border-0 shadow-sm">
+
+            <!-- Card Header -->
+            <div class="card-header bg-success text-white text-center py-3">
+                <h5 class="mb-0">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Login Karein
+                </h5>
+            </div>
+
+            <div class="card-body p-4">
+                <form method="POST" action="/login/">
+                    {% csrf_token %}
+
+                    <!-- Username -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            <i class="bi bi-person me-1"></i>Username
+                        </label>
+                        <input
+                            type="text"
+                            name="username"
+                            class="form-control"
+                            placeholder="apna username likhein"
+                            required
+                            autofocus
+                        >
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            <i class="bi bi-lock me-1"></i>Password
+                        </label>
+                        <input
+                            type="password"
+                            name="password"
+                            class="form-control"
+                            placeholder="apna password likhein"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                    </button>
+
+                </form>
+            </div>
+
+            <div class="card-footer bg-white text-center py-3">
+                <small class="text-muted">
+                    Account nahi hai?
+                    <a href="/role-selection/" class="text-success fw-semibold text-decoration-none">Sign Up karein</a>
+                </small>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

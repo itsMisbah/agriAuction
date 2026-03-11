@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card border-0 shadow-sm">
+
+            <!-- Card Header with role color -->
+            {% if role == 'FARMER' %}
+                <div class="card-header bg-success text-white text-center py-3">
+                    <h5 class="mb-0"><i class="bi bi-person-plus me-2"></i>Farmer Account Banao 👨‍🌾</h5>
+                </div>
+            {% else %}
+                <div class="card-header bg-warning text-dark text-center py-3">
+                    <h5 class="mb-0"><i class="bi bi-person-plus me-2"></i>Buyer Account Banao 🛒</h5>
+                </div>
+            {% endif %}
+
+            <div class="card-body p-4">
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    
+                    <!-- Username -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            <i class="bi bi-person me-1"></i>Username
+                        </label>
+                        <input
+                            type="text"
+                            name="username"
+                            class="form-control"
+                            placeholder="apna username likhein"
+                            required
+                        >
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            <i class="bi bi-envelope me-1"></i>Email
+                        </label>
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control"
+                            placeholder="aapka@email.com"
+                            required
+                        >
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            <i class="bi bi-lock me-1"></i>Password
+                        </label>
+                        <input
+                            type="password"
+                            name="password1"
+                            class="form-control"
+                            placeholder="password set karein"
+                            required
+                        >
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            <i class="bi bi-lock-fill me-1"></i>Password Confirm
+                        </label>
+                        <input
+                            type="password"
+                            name="password2"
+                            class="form-control"
+                            placeholder="dobara likhein"
+                            required
+                        >
+                    </div>
+
+                    <!-- Submit Button -->
+                    {% if role == 'FARMER' %}
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="bi bi-check-circle me-2"></i>Account Banao
+                        </button>
+                    {% else %}
+                        <button type="submit" class="btn btn-warning w-100 fw-semibold text-dark">
+                            <i class="bi bi-check-circle me-2"></i>Account Banao
+                        </button>
+                    {% endif %}
+
+                </form>
+            </div>
+
+            <div class="card-footer bg-white text-center py-3">
+                <small class="text-muted">
+                    Pehle se account hai?
+                    <a href="{% url 'account_login' %}" class="text-success fw-semibold text-decoration-none">Login karein</a>
+                </small>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

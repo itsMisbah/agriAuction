@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 text-center mb-4">
+        <h2 class="fw-bold">Apna Role Chunein</h2>
+        <p class="text-muted">Account banane se pehle batao — aap kisan hain ya buyer?</p>
+    </div>
+</div>
+
+<div class="row justify-content-center g-4">
+
+    <!-- Farmer Card -->
+    <div class="col-md-4">
+        <div class="card h-100 border-2 border-success shadow-sm text-center p-4">
+            <div class="fs-1 mb-3">👨‍🌾</div>
+            <h4 class="fw-bold text-success">Main Kisan Hun</h4>
+            <p class="text-muted small my-3">
+                Apni fasal seedha buyers ko becho.<br>
+                Base price khud set karo.
+            </p>
+            <ul class="list-unstyled text-start small text-muted mb-4">
+                <li class="mb-1"><i class="bi bi-check-circle-fill text-success me-2"></i>Crop listing upload karo</li>
+                <li class="mb-1"><i class="bi bi-check-circle-fill text-success me-2"></i>Base price khud decide karo</li>
+                <li class="mb-1"><i class="bi bi-check-circle-fill text-success me-2"></i>Highest bidder ko becho</li>
+            </ul>
+            <a href="{% url 'get_role' %}?role=FARMER" class="btn btn-success w-100">
+                <i class="bi bi-arrow-right me-2"></i>Farmer Sign Up
+            </a>
+        </div>
+    </div>
+
+    <!-- Buyer Card -->
+    <div class="col-md-4">
+        <div class="card h-100 border-2 border-warning shadow-sm text-center p-4">
+            <div class="fs-1 mb-3">🛒</div>
+            <h4 class="fw-bold text-warning">Main Buyer Hun</h4>
+            <p class="text-muted small my-3">
+                Taza fasal seedha kisan se khareedo.<br>
+                Live auctions mein participate karo.
+            </p>
+            <ul class="list-unstyled text-start small text-muted mb-4">
+                <li class="mb-1"><i class="bi bi-check-circle-fill text-warning me-2"></i>Live auctions mein bid karo</li>
+                <li class="mb-1"><i class="bi bi-check-circle-fill text-warning me-2"></i>Market se sasti qeemat pao</li>
+                <li class="mb-1"><i class="bi bi-check-circle-fill text-warning me-2"></i>Seedha farm se taza fasal</li>
+            </ul>
+            <a href="{% url 'get_role' %}?role=BUYER" class="btn btn-warning w-100 text-dark fw-semibold">
+                <i class="bi bi-arrow-right me-2"></i>Buyer Sign Up
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<!-- Login hint -->
+<div class="text-center mt-4">
+    <p class="text-muted small">
+        Pehle se account hai?
+        <a href="/login/" class="text-success fw-semibold text-decoration-none">Login karein</a>
+    </p>
+</div>
+
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<div class="row justify-content-center text-center py-5">
+    <div class="col-md-8">
+        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 mb-3">
+            🟢 Live Auctions Active
+        </span>
+        <h1 class="display-5 fw-bold text-dark mb-3">
+            Kisan Se Seedha <span class="text-success">Aapke Paas</span>
+        </h1>
+        <p class="lead text-muted mb-4">
+            Pakistan ka pehla Direct Farmer-to-Buyer auction platform.<br>
+            Middlemen ko hatao, kisan ko sahi daam dilao, taza fasal ghar pao.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'select_role' %}" class="btn btn-success btn-lg px-4">
+                <i class="bi bi-person-plus me-2"></i>Sign Up Karein
+            </a>
+            <a href="#" class="btn btn-outline-success btn-lg px-4">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Login
+            </a>
+        </div>
+    </div>
+</div>
+
+<hr class="my-4">
+
+<!-- Stats Row -->
+<div class="row text-center my-4 g-3">
+    <div class="col-6 col-md-3">
+        <div class="card border-0 bg-success text-white py-3">
+            <h3 class="fw-bold mb-0">1,240+</h3>
+            <small>Registered Farmers</small>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 bg-success text-white py-3">
+            <h3 class="fw-bold mb-0">8,900+</h3>
+            <small>Auctions Completed</small>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 bg-success text-white py-3">
+            <h3 class="fw-bold mb-0">32%</h3>
+            <small>Avg Income Increase</small>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 bg-success text-white py-3">
+            <h3 class="fw-bold mb-0">0</h3>
+            <small>Middlemen Involved</small>
+        </div>
+    </div>
+</div>
+
+<!-- Features Row -->
+<div class="row g-4 mt-2">
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm p-4 text-center">
+            <div class="fs-1 mb-3">🌾</div>
+            <h5 class="fw-semibold">Direct Listing</h5>
+            <p class="text-muted small mb-0">
+                Kisan seedha apni fasal list kare. Koi agent nahi, koi commission nahi.
+            </p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm p-4 text-center">
+            <div class="fs-1 mb-3">⚡</div>
+            <h5 class="fw-semibold">Live Bidding</h5>
+            <p class="text-muted small mb-0">
+                Real-time auction system jo sabse achi qeemat guarantee karta hai.
+            </p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm p-4 text-center">
+            <div class="fs-1 mb-3">🔒</div>
+            <h5 class="fw-semibold">Secure Wallet</h5>
+            <p class="text-muted small mb-0">
+                Built-in wallet system jo transparency aur security ensure karta hai.
+            </p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
