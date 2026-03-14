@@ -34,12 +34,12 @@
                     <span class="text-white small me-1">
                         <i class="bi bi-person-circle me-1"></i>{{ user.username }}
                     </span>
-                    <a href="/logout/" class="btn btn-outline-light btn-sm">
+                    <a href="{% url 'account_logout' %}" class="btn btn-outline-light btn-sm">
                         <i class="bi bi-box-arrow-right me-1"></i>Logout
                     </a>
                 {% else %}
-                    <a href="/login/" class="btn btn-outline-light btn-sm">Login</a>
-                    <a href="/role-selection/" class="btn btn-light btn-sm fw-semibold text-success">Sign Up</a>
+                    <a href="{% url 'account_login' %}" class="btn btn-outline-light btn-sm">Login</a>
+                    <a href="{% url 'select_role' %}" class="btn btn-light btn-sm fw-semibold text-success">Sign Up</a>
                 {% endif %}
             </div>
         </div>

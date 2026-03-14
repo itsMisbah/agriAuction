@@ -127,7 +127,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
@@ -148,7 +147,7 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 
-ACCOUNT_SESSION_REMEMBER = True 
+ACCOUNT_SESSION_REMEMBER = None 
 ACCOUNT_SESSION_REMEMBER_AGE = 60 * 60 * 24 * 30
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

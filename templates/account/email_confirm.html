@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card border-0 shadow">
+
+            <div class="card-header bg-success text-white text-center py-4">
+                <h4 class="mb-0"><i class="bi bi-shield-check me-2"></i>Email Confirm Karein</h4>
+            </div>
+
+            <div class="card-body p-4 text-center">
+                <div class="mb-4">
+                    <i class="bi bi-envelope-check text-success" style="font-size: 4rem;"></i>
+                </div>
+
+                {% if confirmation %}
+                    <p class="text-muted mb-4">
+                        Kya aap is email ko confirm karna chahte hain?<br>
+                        <strong class="text-dark">{{ confirmation.email_address.email }}</strong>
+                    </p>
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success w-100 py-2 fw-semibold">
+                            <i class="bi bi-check-circle me-2"></i>Haan, Confirm Karein
+                        </button>
+                    </form>
+                {% else %}
+                    <div class="alert alert-danger text-start">
+                        <i class="bi bi-x-circle me-2"></i>
+                        Ye confirmation link <strong>expire</strong> ho gayi hai ya valid nahi hai.
+                    </div>
+                    <a href="{% url 'account_email' %}" class="btn btn-success w-100 py-2 fw-semibold">
+                        <i class="bi bi-arrow-repeat me-2"></i>Dobara Email Bhejein
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="card-footer bg-white text-center py-3">
+                <small class="text-muted">
+                    <a href="{% url 'account_login' %}" class="text-success fw-semibold text-decoration-none">
+                        Login page pe jaayein
+                    </a>
+                </small>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
