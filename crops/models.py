@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
+from datetime import timedelta
 
 # Create your models here.
 class Crop(models.Model):
@@ -38,6 +40,10 @@ class Crop(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def is_ending_soon(self):
+        return self.end_date <= timezone.now() + timedelta(hours=24)
     
 class Bid(models.Model):
     crop = models.ForeignKey(Crop, on_delete=models.CASCADE, related_name='bids')

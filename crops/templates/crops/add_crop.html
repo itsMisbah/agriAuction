@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+
+        <!-- Page Header -->
+        <div class="mb-4">
+            <h3 class="fw-bold text-success">
+                <i class="bi bi-plus-circle me-2"></i>Nayi Fasal List Karein
+            </h3>
+            <p class="text-muted mb-0">Apni fasal ki details fill karein</p>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- Row 1: Title + Category -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-tag me-1"></i>Fasal Ka Naam
+                            </label>
+                            <input
+                                type="text"
+                                name="title"
+                                class="form-control"
+                                placeholder="e.g. Basmati Rice, Mango, Wheat"
+                                value="{{ form.title.value|default:'' }}"
+                                required
+                            >
+                            <!-- Error -->
+                            {% if form.title.errors %}
+                                <div class="text-danger small mt-1">{{ form.title.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-grid me-1"></i>Category
+                            </label>
+                            <select name="category" class="form-select" required>
+                                {% for value, label in form.category.field.choices %}
+                                    <option value="{{ value }}" {% if form.category.value == value %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% if form.category.errors %}
+                                <div class="text-danger small mt-1">{{ form.category.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Description -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            <i class="bi bi-card-text me-1"></i>Description
+                        </label>
+                        <textarea
+                            name="description"
+                            class="form-control"
+                            rows="3"
+                            placeholder="Fasal ki quality, variety, ya koi khas baat likhein..."
+                            required
+                        >{{ form.description.value|default:'' }}</textarea>
+                        {% if form.description.errors %}
+                            <div class="text-danger small mt-1">{{ form.description.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Row 3: Weight + Base Price + Quality -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-speedometer2 me-1"></i>Weight (kg)
+                            </label>
+                            <input
+                                type="number"
+                                name="weight"
+                                class="form-control"
+                                placeholder="e.g. 100"
+                                step="0.01"
+                                min="0"
+                                value="{{ form.weight.value|default:'' }}"
+                                required>
+                            {% if form.weight.errors %}
+                                <div class="text-danger small mt-1">{{ form.weight.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-currency-rupees me-1"></i>Base Price (Rs.)
+                            </label>
+                            <input
+                                type="number"
+                                name="base_price"
+                                class="form-control"
+                                placeholder="e.g. 5000"
+                                step="0.01"
+                                min="0"
+                                value="{{ form.base_price.value|default:'' }}"
+                                required
+                            >
+                            {% if form.base_price.errors %}
+                                <div class="text-danger small mt-1">{{ form.base_price.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-star me-1"></i>Quality Grade
+                            </label>
+                            <select name="quality_grade" class="form-select" required>
+                                {% for value, label in form.quality_grade.field.choices %}
+                                    <option value="{{ value }}" {% if form.quality_grade.value == value %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% if form.quality_grade.errors %}
+                                <div class="text-danger small mt-1">{{ form.quality_grade.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Row 4: Location + End Date -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-geo-alt me-1"></i>Location
+                            </label>
+                            <input
+                                type="text"
+                                name="location"
+                                class="form-control"
+                                placeholder="e.g. Lahore, Punjab"
+                                value="{{ form.location.value|default:'' }}"
+                                required
+                            >
+                            {% if form.location.errors %}
+                                <div class="text-danger small mt-1">{{ form.location.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-calendar-event me-1"></i>Auction End Date & Time
+                            </label>
+                            <input
+                                type="datetime-local"
+                                name="end_date"
+                                class="form-control"
+                                value="{{ form.end_date.value|default:'' }}"
+                                required
+                            >
+                            {% if form.end_date.errors %}
+                                <div class="text-danger small mt-1">{{ form.end_date.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Row 5: Image Upload -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            <i class="bi bi-image me-1"></i>Fasal Ki Tasveer
+                            <span class="text-muted fw-normal">(optional)</span>
+                        </label>
+                        <input
+                            type="file"
+                            name="images"
+                            class="form-control"
+                            accept="image/*"
+                        >
+                        {% if form.images.errors %}
+                            <div class="text-danger small mt-1">{{ form.images.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success px-4">
+                            <i class="bi bi-check-circle me-2"></i>Fasal List Karein
+                        </button>
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary px-4">
+                            <i class="bi bi-x-circle me-2"></i>Cancel
+                        </a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

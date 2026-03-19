@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Back Button -->
+<div class="mb-3">
+    <a href="{% url 'crop_detail' crop.id %}" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>Back to Detail
+    </a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h4 class="fw-bold mb-0">
+                    <i class="bi bi-pencil-square me-2 text-success"></i>Edit Listing: {{ crop.title }}
+                </h4>
+            </div>
+
+            <div class="card-body p-4">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- Row 1: Title + Category -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-tag me-1"></i>Fasal Ka Naam
+                            </label>
+                            <input
+                                type="text"
+                                name="title"
+                                class="form-control"
+                                value="{{ form.title.value }}"
+                                required
+                            >
+                            {% if form.title.errors %}
+                                <div class="text-danger small mt-1">{{ form.title.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-grid me-1"></i>Category
+                            </label>
+                            <select name="category" class="form-select">
+                                {% for value, label in form.category.field.choices %}
+                                    <option value="{{ value }}" {% if form.category.value == value %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Description -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            <i class="bi bi-card-text me-1"></i>Description
+                        </label>
+                        <textarea name="description" class="form-control" rows="3" required>{{ form.description.value }}</textarea>
+                        {% if form.description.errors %}
+                            <div class="text-danger small mt-1">{{ form.description.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Row 3: Weight + Base Price + Quality -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-speedometer2 me-1"></i>Weight (kg)
+                            </label>
+                            <input
+                                type="number"
+                                name="weight"
+                                class="form-control"
+                                step="0.01"
+                                min="0"
+                                value="{{ form.weight.value }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-currency-rupee me-1"></i>Base Price (Rs.)
+                            </label>
+                            <input
+                                type="number"
+                                name="base_price"
+                                class="form-control"
+                                step="0.01"
+                                min="0"
+                                value="{{ form.base_price.value }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-star me-1"></i>Quality Grade
+                            </label>
+                            <select name="quality_grade" class="form-select">
+                                {% for value, label in form.quality_grade.field.choices %}
+                                    <option value="{{ value }}" {% if form.quality_grade.value == value %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Row 4: Location + End Date -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-geo-alt me-1"></i>Location
+                            </label>
+                            <input
+                                type="text"
+                                name="location"
+                                class="form-control"
+                                value="{{ form.location.value }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-calendar-event me-1"></i>Auction End Date & Time
+                            </label>
+                            <input
+                                type="datetime-local"
+                                name="end_date"
+                                class="form-control"
+                                value="{{ form.end_date.value|date:'Y-m-d\TH:i' }}"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Row 5: Image -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            <i class="bi bi-image me-1"></i>Tasveer Tabdeel Karein
+                            <span class="text-muted fw-normal">(optional — chhodne par purani rahegi)</span>
+                        </label>
+                        {% if crop.images %}
+                            <div class="mb-2">
+                                <img src="{{ crop.images.url }}" height="80" class="rounded border" alt="current image">
+                                <span class="text-muted small ms-2">Current image</span>
+                            </div>
+                        {% endif %}
+                        <input type="file" name="images" class="form-control" accept="image/*">
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success px-4">
+                            <i class="bi bi-check-circle me-2"></i>Changes Save Karein
+                        </button>
+                        <a href="{% url 'crop_detail' crop.id %}" class="btn btn-outline-secondary px-4">
+                            <i class="bi bi-x-circle me-2"></i>Cancel
+                        </a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,5 +1,6 @@
 from pathlib import Path
 import environ
+import os
 
 env = environ.Env()
 
@@ -97,6 +98,10 @@ DATABASES = {
     }
 }
 
+# Media Files Configuration
+MEDIA_URL = '/media/'
+# Define the absolute path to the directory where uploaded files will be stored
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
