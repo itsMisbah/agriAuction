@@ -45,6 +45,17 @@ class Crop(models.Model):
     def is_ending_soon(self):
         return self.end_date <= timezone.now() + timedelta(hours=24)
     
+    @property
+    def highest_bid(self):
+        bid = self.bids.order_by('-bid_amount').first()
+        return bid.bid_amount if bid else None
+    
+    def expire_crop(self):
+        if self.end_date <= timezone.now() and self.status == 'active':
+            self.status = self.crop_status.EXPIRED
+            self.save()
+            
+    
 class Bid(models.Model):
     crop = models.ForeignKey(Crop, on_delete=models.CASCADE, related_name='bids')
     bidder = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bids')

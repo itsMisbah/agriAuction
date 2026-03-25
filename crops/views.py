@@ -1,10 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404
-
-from crops.models import Crop
+from crops.models import Bid, Crop
 from .forms import CropForm
+from decimal import Decimal
 
 @login_required
 def add_crop(request):
@@ -19,7 +18,7 @@ def add_crop(request):
             crop.farmer = request.user      
             crop.save()                    
             messages.success(request, 'Crop added successfully!')
-            return redirect('home')   
+            return redirect('crop_detail', crop_id=crop.id)   
     else:
         form = CropForm()
 
@@ -27,6 +26,10 @@ def add_crop(request):
 
 @login_required
 def crop_list(request):
+    if request.user.role != 'FARMER':
+        messages.error(request, 'Only farmers can view their listings.')
+        return redirect('home')
+    
     crops = Crop.objects.filter(farmer=request.user) 
     category = request.GET.get('category')
     status = request.GET.get('status')
@@ -38,12 +41,15 @@ def crop_list(request):
 
 @login_required
 def crop_detail(request, crop_id):
-    crop = Crop.objects.get(id=crop_id)
+    crop = get_object_or_404(Crop, id=crop_id)
+    if request.user != crop.farmer:
+        messages.error(request, 'You are not authorized to view this crop.')
+        return redirect('home')
     return render(request, 'crops/crop_detail.html', {'crop': crop})
 
 @login_required
 def edit_crop(request, crop_id):
-    crop = Crop.objects.get(id=crop_id)
+    crop = get_object_or_404(Crop, id=crop_id)
     if request.user != crop.farmer:
         messages.error(request, 'You are not authorized to edit this crop.')
         return redirect('home')
@@ -74,6 +80,32 @@ def marketplace(request):
         crops = crops.filter(title__icontains=search)
     return render(request, 'crops/marketplace.html', {'crops': crops})
 
+@login_required
 def crop_bid(request, crop_id):
     crop = get_object_or_404(Crop, id=crop_id)
-    return render(request, 'crops/crop_bid.html', {'crop': crop})
+    highest_bid = crop.bids.order_by('-bid_amount').first()
+    current_highest_bid = highest_bid.bid_amount if highest_bid else crop.base_price
+    if request.user == crop.farmer:
+        messages.error(request, 'You cannot place bid at your own crop.')
+        return redirect('home')
+    
+    if crop.status != 'active':
+        messages.error(request, 'Cannot bid on inactive crop.')
+        return redirect('marketplace')
+    
+    if request.method == 'POST':
+        current_bid_amount = request.POST.get('bid_amount')
+        if not current_bid_amount:
+            messages.error(request, 'Please enter a bid amount.')
+            return redirect('crop_bid', crop_id=crop.id)
+        
+        if Decimal(current_bid_amount) > current_highest_bid:
+            bid = Bid(crop=crop, bidder=request.user, bid_amount=current_bid_amount)
+            bid.save()
+            messages.success(request, 'Your bid has been placed successfully!')
+            return redirect('crop_bid', crop_id=crop.id)
+        else:
+            messages.error(request, 'Your bid must be higher than the current bid and the base price.')
+            return redirect('crop_bid', crop_id=crop.id)
+    bids = crop.bids.order_by('-bid_amount')
+    return render(request, 'crops/crop_bid.html', {'crop': crop, 'bids': bids})
