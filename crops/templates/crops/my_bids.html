@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="fw-bold text-dark mb-0">My Bids 🏷️</h3>
+        <p class="text-muted small mb-0">Aapki tamam lagayi hui bids ka record</p>
+    </div>
+    <a href="{% url 'marketplace' %}" class="btn btn-success btn-sm">
+        <i class="bi bi-shop me-1"></i>Marketplace
+    </a>
+</div>
+
+<!-- ===== SUMMARY CARDS ===== -->
+<div class="row g-3 mb-4">
+
+    <!-- Total Bids -->
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm border-start border-primary border-4 h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="bg-primary bg-opacity-10 rounded p-3">
+                    <i class="bi bi-hammer text-primary fs-4"></i>
+                </div>
+                <div>
+                    <div class="text-muted small">Total Bids</div>
+                    <div class="fs-4 fw-bold text-primary">{{ total_bids }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Bids -->
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm border-start border-success border-4 h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="bg-success bg-opacity-10 rounded p-3">
+                    <i class="bi bi-activity text-success fs-4"></i>
+                </div>
+                <div>
+                    <div class="text-muted small">Active</div>
+                    <div class="fs-4 fw-bold text-success">{{ active_bids }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Won Auctions -->
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm border-start border-warning border-4 h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="bg-warning bg-opacity-10 rounded p-3">
+                    <i class="bi bi-trophy text-warning fs-4"></i>
+                </div>
+                <div>
+                    <div class="text-muted small">Won</div>
+                    <div class="fs-4 fw-bold text-warning">{{ won_bids }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lost Auctions -->
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm border-start border-secondary border-4 h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="bg-secondary bg-opacity-10 rounded p-3">
+                    <i class="bi bi-x-circle text-secondary fs-4"></i>
+                </div>
+                <div>
+                    <div class="text-muted small">Lost / Expired</div>
+                    <div class="fs-4 fw-bold text-secondary">{{ lost_bids }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ===== BIDS TABLE ===== -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+
+        {% if bids %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Fasal</th>
+                        <th>Seller</th>
+                        <th>Meri Bid</th>
+                        <th>Highest Bid</th>
+                        <th>Auction Status</th>
+                        <th>Result</th>
+                        <th>Bid Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bid in bids %}
+                    <tr
+                        {% if bid.crop.status == 'active' %}
+                            onclick='window.location="{% url "crop_bid" bid.crop.id %}"'
+                            style="cursor: pointer;"
+                        {% endif %}
+                    >
+                        <!-- Fasal -->
+                        <td class="ps-4">
+                            <div class="fw-semibold">{{ bid.crop.title }}</div>
+                            <div class="text-muted small">
+                                <i class="bi bi-geo-alt me-1"></i>{{ bid.crop.location }}
+                            </div>
+                        </td>
+
+                        <!-- Seller -->
+                        <td>
+                            <i class="bi bi-person-circle me-1 text-muted"></i>
+                            {{ bid.crop.seller.username }}
+                        </td>
+
+                        <!-- Meri Bid -->
+                        <td class="fw-semibold">Rs. {{ bid.bid_amount }}</td>
+
+                        <!-- Highest Bid -->
+                        <td>
+                            {% if bid.crop.highest_bid %}
+                                {% if bid.bid_amount == bid.crop.highest_bid %}
+                                    <span class="text-success fw-semibold">Rs. {{ bid.crop.highest_bid }}</span>
+                                {% else %}
+                                    <span class="text-danger fw-semibold">Rs. {{ bid.crop.highest_bid }}</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-muted small">—</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Auction Status -->
+                        <td>
+                            {% if bid.crop.status == 'active' %}
+                                <span class="badge bg-success">Active</span>
+                            {% elif bid.crop.status == 'sold' %}
+                                <span class="badge bg-primary">Sold</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Expired</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Result -->
+                        <td>
+                            {% if bid.crop.status == 'active' %}
+                                <!-- Auction chal rahi hai -->
+                                {% if bid.bid_amount == bid.crop.highest_bid %}
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle">
+                                        <i class="bi bi-arrow-up me-1"></i>Leading
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle">
+                                        <i class="bi bi-arrow-down me-1"></i>Outbid
+                                    </span>
+                                {% endif %}
+
+                            {% elif bid.crop.status == 'sold' %}
+                                <!-- Auction khatam -->
+                                {% if bid.crop.winner == request.user %}
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="bi bi-trophy me-1"></i>Won!
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-x me-1"></i>Lost
+                                    </span>
+                                {% endif %}
+
+                            {% else %}
+                                <!-- Expired — koi nahi jeeta -->
+                                <span class="badge bg-secondary">
+                                    <i class="bi bi-dash me-1"></i>No Winner
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Bid Time -->
+                        <td class="text-muted small">
+                            {{ bid.bid_time|date:"M d, Y" }}<br>
+                            {{ bid.bid_time|date:"h:i A" }}
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% else %}
+        <!-- Empty State -->
+        <div class="text-center py-5">
+            <i class="bi bi-hammer fs-1 text-muted"></i>
+            <p class="text-muted mt-3 mb-3">Abhi tak koi bid nahi lagayi</p>
+            <a href="{% url 'marketplace' %}" class="btn btn-success px-4">
+                <i class="bi bi-shop me-2"></i>Marketplace Dekho
+            </a>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

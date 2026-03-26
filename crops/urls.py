@@ -8,4 +8,5 @@ urlpatterns = [
     path('edit-crop/<int:crop_id>/', views.edit_crop, name='edit_crop'),
     path('marketplace/', views.marketplace, name='marketplace'),
     path('crop-bid/<int:crop_id>/', views.crop_bid, name='crop_bid'),
+    path('my-bids/', views.my_bids, name='my_bids'),
 ]

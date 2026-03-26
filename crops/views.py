@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -14,7 +15,11 @@ def add_crop(request):
     if request.method == 'POST':
         form = CropForm(request.POST, request.FILES) 
         if form.is_valid():
-            crop = form.save(commit=False) 
+            crop = form.save(commit=False)
+
+            if timezone.is_naive(crop.end_date):
+                crop.end_date = timezone.make_aware(crop.end_date) 
+
             crop.farmer = request.user      
             crop.save()                    
             messages.success(request, 'Crop added successfully!')
@@ -30,7 +35,12 @@ def crop_list(request):
         messages.error(request, 'Only farmers can view their listings.')
         return redirect('home')
     
-    crops = Crop.objects.filter(farmer=request.user) 
+    crops = Crop.objects.filter(farmer=request.user)
+
+    for crop in crops:
+        crop.update_status_if_expired()
+
+    crops = Crop.objects.filter(farmer=request.user)
     category = request.GET.get('category')
     status = request.GET.get('status')
     if category:
@@ -42,14 +52,17 @@ def crop_list(request):
 @login_required
 def crop_detail(request, crop_id):
     crop = get_object_or_404(Crop, id=crop_id)
+    crop.update_status_if_expired()
     if request.user != crop.farmer:
         messages.error(request, 'You are not authorized to view this crop.')
         return redirect('home')
-    return render(request, 'crops/crop_detail.html', {'crop': crop})
+    bids = crop.bids.order_by('-bid_amount')
+    return render(request, 'crops/crop_detail.html', {'crop': crop, 'bids': bids})
 
 @login_required
 def edit_crop(request, crop_id):
     crop = get_object_or_404(Crop, id=crop_id)
+    crop.update_status_if_expired()
     if request.user != crop.farmer:
         messages.error(request, 'You are not authorized to edit this crop.')
         return redirect('home')
@@ -72,6 +85,12 @@ def marketplace(request):
         return redirect('home')
 
     crops = Crop.objects.filter(status='active')
+
+    for crop in crops:
+        crop.update_status_if_expired()
+    
+    crops = Crop.objects.filter(status='active')
+
     category = request.GET.get('category')
     search = request.GET.get('search')
     if category:
@@ -83,6 +102,7 @@ def marketplace(request):
 @login_required
 def crop_bid(request, crop_id):
     crop = get_object_or_404(Crop, id=crop_id)
+    crop.update_status_if_expired()
     highest_bid = crop.bids.order_by('-bid_amount').first()
     current_highest_bid = highest_bid.bid_amount if highest_bid else crop.base_price
     if request.user == crop.farmer:
@@ -109,3 +129,4 @@ def crop_bid(request, crop_id):
             return redirect('crop_bid', crop_id=crop.id)
     bids = crop.bids.order_by('-bid_amount')
     return render(request, 'crops/crop_bid.html', {'crop': crop, 'bids': bids})
+

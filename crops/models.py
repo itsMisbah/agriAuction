@@ -37,6 +37,7 @@ class Crop(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField()
     quality_grade = models.CharField(max_length=10, choices=quality_grade.choices, default=quality_grade.AVERAGE)
+    winner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='won_crops')
 
     def __str__(self):
         return self.title
@@ -50,10 +51,19 @@ class Crop(models.Model):
         bid = self.bids.order_by('-bid_amount').first()
         return bid.bid_amount if bid else None
     
-    def expire_crop(self):
-        if self.end_date <= timezone.now() and self.status == 'active':
-            self.status = self.crop_status.EXPIRED
-            self.save()
+    @property  
+    def highest_bidder(self):
+        bid = self.bids.order_by('-bid_amount').first()
+        return bid.bidder if bid else None
+    
+    def update_status_if_expired(self):
+       if self.status == 'active' and self.end_date < timezone.now():
+           if self.highest_bidder:
+               self.status = 'sold'
+               self.winner = self.highest_bidder  
+           else:
+               self.status = 'expired'
+           self.save()
             
     
 class Bid(models.Model):
