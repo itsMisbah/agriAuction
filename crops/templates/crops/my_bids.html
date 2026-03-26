@@ -5,7 +5,7 @@
 <!-- Header -->
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h3 class="fw-bold text-dark mb-0">My Bids 🏷️</h3>
+        <h3 class="fw-bold text-dark mb-0">My Bids</h3>
         <p class="text-muted small mb-0">Aapki tamam lagayi hui bids ka record</p>
     </div>
     <a href="{% url 'marketplace' %}" class="btn btn-success btn-sm">
@@ -115,7 +115,7 @@
                         <!-- Seller -->
                         <td>
                             <i class="bi bi-person-circle me-1 text-muted"></i>
-                            {{ bid.crop.seller.username }}
+                            {{ bid.crop.farmer.username }}
                         </td>
 
                         <!-- Meri Bid -->

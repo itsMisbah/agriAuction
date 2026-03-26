@@ -130,3 +130,15 @@ def crop_bid(request, crop_id):
     bids = crop.bids.order_by('-bid_amount')
     return render(request, 'crops/crop_bid.html', {'crop': crop, 'bids': bids})
 
+@login_required
+def my_bids(request):
+    if request.user.role != 'BUYER':
+        messages.error(request, 'Only buyers can view their bids.')
+        return redirect('home')
+
+    bids = Bid.objects.filter(bidder=request.user).select_related('crop').order_by('-bid_amount')
+    total_bids = bids.count()
+    active_bids = bids.filter(crop__status='active').count()
+    won_bids = bids.filter(crop__status='sold', crop__winner=request.user).count()
+    lost_bids = bids.filter(crop__status='sold').exclude(crop__winner=request.user).count()
+    return render(request, 'crops/my_bids.html', {'bids': bids, 'total_bids': total_bids, 'active_bids': active_bids, 'won_bids': won_bids, 'lost_bids': lost_bids})
