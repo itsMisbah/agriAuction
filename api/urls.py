@@ -1,13 +1,13 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-from .views import register, login, logout, current_user
+from .views import register, login, logout, current_user, CropViewSet
 
 app_name = 'api'
 
 # Create router for ViewSets
 router = DefaultRouter()
-# router.register(r'crops', CropViewSet, basename='crop')
+router.register(r'crops', CropViewSet, basename='crop')
 
 urlpatterns = [
     # Authentication
