@@ -109,10 +109,15 @@
     </div>
 </div>
 
-<!-- Bootstrap classes input fields pe lagao -->
 <script>
     document.querySelectorAll('input, select, textarea').forEach(el => {
         el.classList.add('form-control', 'mt-1');
+    });
+    document.querySelector('form').addEventListener('submit', async function(e) {
+        
+        const email = document.querySelector('input[name="email"]').value;
+        const password = document.querySelector('input[name="password1"]').value;
+        
     });
 </script>
 

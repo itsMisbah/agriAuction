@@ -100,6 +100,28 @@
     document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]').forEach(el => {
         el.classList.add('form-control', 'mt-1');
     });
+
+    document.querySelector('form').addEventListener('submit', async function(e) {
+        const email = document.querySelector('input[name="login"]').value;
+        const password = document.querySelector('input[name="password"]').value;
+
+        // JWT bhi le lo background mein — allauth ka flow same rahega
+        try {
+            const res = await fetch('/api/auth/login/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+            if (data.tokens) {
+                localStorage.setItem('access', data.tokens.access);
+                localStorage.setItem('refresh', data.tokens.refresh);
+            }
+        } catch (err) {
+            console.log('JWT save nahi hua:', err);
+        }
+        // Form normally submit hoga — allauth session bhi banayega
+    });
 </script>
 
 {% endblock %}

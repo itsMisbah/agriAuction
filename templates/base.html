@@ -16,6 +16,16 @@
         main { flex: 1; }
         .navbar-brand { font-size: 1.4rem; font-weight: 700; }
     </style>
+    <script>
+    
+    const access = "{{ request.session.jwt_access|default:'' }}";
+    const refresh = "{{ request.session.jwt_refresh|default:'' }}";
+    
+    if (access) {
+        localStorage.setItem('access', access);
+        localStorage.setItem('refresh', refresh);
+    }
+</script>
 </head>
 <body>
 

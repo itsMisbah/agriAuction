@@ -36,4 +36,29 @@
     </div>
 </div>
 
+<script>
+    document.querySelector('form').addEventListener('submit', async function() {
+        const refresh = localStorage.getItem('refresh');
+        const access = localStorage.getItem('access');
+
+        if (refresh) {
+            try {
+                await fetch('/api/auth/logout/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${access}`
+                    },
+                    body: JSON.stringify({ refresh })
+                });
+            } catch (err) {
+                console.log('JWT logout error:', err);
+            }
+        }
+        // Tokens delete 
+        localStorage.removeItem('access');
+        localStorage.removeItem('refresh');
+    });
+</script>
+
 {% endblock %}
