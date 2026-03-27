@@ -1,24 +1,15 @@
 from pathlib import Path
-import environ
 import os
 import dj_database_url
 from dotenv import load_dotenv
-load_dotenv()
 
-env = environ.Env()
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-if os.environ.get("RAILWAY_ENV") != "production":
-    environ.Env.read_env( env_file=BASE_DIR / '.env' )
-    
-SECRET_KEY = env("SECRET_KEY")
-
-
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(',')
 SECRET_KEY = os.environ.get('SECRET_KEY')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(',')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -85,8 +76,8 @@ SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': ['profile', 'email'],
         'AUTH_PARAMS': {'access_type': 'online'},
-        'CLIENT_ID': env("CLIENT_ID"),
-        'SECRET': env("SECRET"),
+        'CLIENT_ID': os.environ.get("CLIENT_ID"),
+        'SECRET': os.environ.get("SECRET"),
     }
 }
 
@@ -128,11 +119,11 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': env("DATABASE_NAME"),
-            'USER': env("DATABASE_USER"),
-            'PASSWORD': env("DATABASE_PASSWORD"),
-            'HOST': env("DATABASE_HOST"),
-            'PORT': env("DATABASE_PORT"),
+            'NAME': os.environ.get("DATABASE_NAME"),
+            'USER': os.environ.get("DATABASE_USER"),
+            'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
+            'HOST': os.environ.get("DATABASE_HOST"),
+            'PORT': os.environ.get("DATABASE_PORT"),
         }
     }
 
