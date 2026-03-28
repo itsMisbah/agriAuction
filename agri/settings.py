@@ -127,6 +127,10 @@ else:
         }
     }
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://agrifarma.up.railway.app',
+]
+
 # Media Files Configuration
 MEDIA_URL = '/media/'
 # Define the absolute path to the directory where uploaded files will be stored
