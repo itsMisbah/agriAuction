@@ -1,2 +1,0 @@
-[deploy]
-startCommand = "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn agri.wsgi --log-file -"
