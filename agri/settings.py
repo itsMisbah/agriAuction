@@ -100,6 +100,8 @@ TEMPLATES = [
     },
 ]
 
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+
 WSGI_APPLICATION = 'agri.wsgi.application'
 
 
